@@ -1,0 +1,24 @@
+name: SimpleFarmansPK
+version: '1.0'
+main: me.farmans.simplefarmanspk.SimpleFarmansPK
+api-version: '1.20'
+authors: [Farmans]
+
+commands:
+  pksetup:
+    description: nastav
+    usage: /pksetup <name> [x] [y] [z]
+    permission: op
+  pkreload:
+    description: reloadne config
+    usage: /pkreload
+    permission: op
+  pkcheckpoint:
+    description: nastavi ti cp
+    usage: /pkcheckpoint <name> [id] [x] [y] [z]
+    permission: op
+    aliases: [pkcp]
+  pkfinish:
+    description: nastavi ti finish
+    usage: /pkfinish <name> [x] [y] [z]
+    permission: op
