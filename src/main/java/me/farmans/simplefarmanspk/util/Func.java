@@ -14,7 +14,7 @@ import java.util.Map;
 
 public class Func {
     public static void sendMessage(CommandSender sender, String msg) {
-        sender.sendMessage(ChatColor.BLUE + "" + ChatColor.BOLD + "SFPK: " + ChatColor.RESET + msg);
+        sender.sendMessage(ChatColor.BLUE + "" + ChatColor.BOLD + "SFPK > " + ChatColor.RESET + msg);
     }
 
     public static void updateActionBar(SimpleFarmansPK plugin) {
@@ -31,7 +31,7 @@ public class Func {
                     String finalTimeDecimal = finalTime.split("\\.")[1];
                     if (finalTimeDecimal.length() < 3) finalTime += "0".repeat(3-finalTimeDecimal.length());
                     else if (finalTimeDecimal.length() > 3) finalTime = finalTime.split(".")[0]+"."+finalTimeDecimal.substring(0, 3);
-                    player.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent("Tvuj cas: " + finalTime + "s"));
+                    player.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent(ChatColor.AQUA + "Tvůj čas: " + ChatColor.RESET + finalTime + "s"));
                 }
             }
         }, 0, 5);

@@ -15,9 +15,6 @@ public class PlayerLeave implements Listener {
     public void onPlayerLeave(PlayerQuitEvent event) {
         String playerName = event.getPlayer().getName();
 
-        if (plugin.getConfig().contains(""))
-        //for (String player : plugin.getConfig().)
-
         if (PlayerInteraction.times.containsKey(playerName)) {
             PlayerInteraction.times.remove(playerName);
         }

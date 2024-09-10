@@ -15,7 +15,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 
-import javax.naming.Name;
 import java.util.Collections;
 import java.util.List;
 
@@ -30,7 +29,7 @@ public class CheckpointCommand implements CommandExecutor, TabExecutor {
 
         String name = args[0];
         if (!plugin.getConfig().contains(String.format("parkours.%s", name))) {
-            Func.sendMessage(sender, "Jmeno parkouru neexistuje");
+            Func.sendMessage(sender, "Jméno parkouru neexistuje");
             return true;
         }
 
@@ -40,12 +39,12 @@ public class CheckpointCommand implements CommandExecutor, TabExecutor {
             id = Integer.parseInt(args[1]);
             if (plugin.getConfig().contains(String.format("parkours.%s.checkpoints", name))) {
                 if (id > 1+plugin.getConfig().getConfigurationSection(String.format("parkours.%s.checkpoints", name)).getKeys(false).size()) {
-                    Func.sendMessage(sender, "Pocet checkpointu nevychazi");
+                    Func.sendMessage(sender, "Počet checkpointu nevychazi");
                     return true;
                 }
             } else {
                 if (id != 1) {
-                    Func.sendMessage(sender, "Pocet checkpointu nevychazi");
+                    Func.sendMessage(sender, "Počet checkpointu nevychazi");
                     return true;
                 }
             }
@@ -59,12 +58,12 @@ public class CheckpointCommand implements CommandExecutor, TabExecutor {
             id = Integer.parseInt(args[1]);
             if (plugin.getConfig().contains(String.format("parkours.%s.checkpoints", name))) {
                 if (id > 1+plugin.getConfig().getConfigurationSection(String.format("parkours.%s.checkpoints", name)).getKeys(false).size()) {
-                    Func.sendMessage(sender, "Pocet checkpointu nevychazi");
+                    Func.sendMessage(sender, "Počet checkpointu nevychazi");
                     return true;
                 }
             } else {
                 if (id != 1) {
-                    Func.sendMessage(sender, "Pocet checkpointu nevychazi");
+                    Func.sendMessage(sender, "Počet checkpointů nevychází");
                     return true;
                 }
             }
@@ -82,7 +81,7 @@ public class CheckpointCommand implements CommandExecutor, TabExecutor {
         Block block = new Location(player.getWorld(), x, y+1, z).getBlock();
 
         if (block.getType() != Material.AIR) {
-            Func.sendMessage(sender, "Nemuzu polozit bro, musi byt vzduch");
+            Func.sendMessage(sender, "Nemůžu položit bro, musí být vzduch");
             return true;
         }
         plugin.getConfig().set(String.format("parkours.%s.checkpoints.%s", name, id), String.format("%s %s %s", x, y+1, z));
@@ -92,7 +91,7 @@ public class CheckpointCommand implements CommandExecutor, TabExecutor {
         PersistentDataContainer blockData = new CustomBlockData(block, plugin);
         blockData.set(new NamespacedKey(plugin, "parkourName"), PersistentDataType.STRING, name);
         blockData.set(new NamespacedKey(plugin, "checkpointId"), PersistentDataType.INTEGER, id);
-        Func.sendMessage(sender, "Parkour " + name + " Checkpoint " + id + " byl vytvoren");
+        Func.sendMessage(sender, "Parkour " + name + " Checkpoint " + id + " byl vytvořen");
 
 
         return true;

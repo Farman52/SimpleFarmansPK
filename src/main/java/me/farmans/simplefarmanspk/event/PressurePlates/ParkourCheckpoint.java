@@ -43,7 +43,7 @@ public class ParkourCheckpoint {
         if (!PlayerInteraction.times.containsKey(playerName)) return;
         if (!PlayerInteraction.times.get(playerName).get(0).equals(name)) return;
         if ((PlayerInteraction.checkpoints.containsKey(playerName) && PlayerInteraction.checkpoints.get(playerName).size() != id-1) || (!PlayerInteraction.checkpoints.containsKey(playerName) && id != 1)) {
-            Func.sendMessage(event.getPlayer(), "Preskocil jsi checkpoint");
+            Func.sendMessage(event.getPlayer(), "Přeskočil jsi checkpoint");
             return;
         }
         double finalTime = (double)(time - (long) PlayerInteraction.times.get(playerName).get(1))/1000;
@@ -55,7 +55,7 @@ public class ParkourCheckpoint {
         String finalTimeDecimal = fancyFinalTime.split("\\.")[1];
         if (finalTimeDecimal.length() < 3) fancyFinalTime += "0".repeat(3-finalTimeDecimal.length());
         else if (finalTimeDecimal.length() > 3) fancyFinalTime = fancyFinalTime.split(".")[0]+"."+finalTimeDecimal.substring(0, 3);
-        Func.sendMessage(event.getPlayer(), String.format("Dosahl jsi %s. checkpointu v case %ss", PlayerInteraction.checkpoints.get(playerName).size(), fancyFinalTime));
+        Func.sendMessage(event.getPlayer(), String.format("Dosáhl jsi %s. checkpointu v čase %ss", PlayerInteraction.checkpoints.get(playerName).size(), fancyFinalTime));
 
     }
 }

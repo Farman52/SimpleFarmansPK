@@ -4,6 +4,7 @@ import com.jeff_media.customblockdata.CustomBlockData;
 import me.farmans.simplefarmanspk.SimpleFarmansPK;
 import me.farmans.simplefarmanspk.event.PlayerInteraction;
 import me.farmans.simplefarmanspk.util.Func;
+import org.bukkit.Location;
 import org.bukkit.NamespacedKey;
 import org.bukkit.block.Block;
 import org.bukkit.event.player.PlayerInteractEvent;
@@ -35,7 +36,7 @@ public class ParkourFinish {
         if (!PlayerInteraction.times.containsKey(playerName)) return;
         if (!PlayerInteraction.times.get(playerName).get(0).equals(name)) return;
         if (plugin.getConfig().contains(String.format("parkours.%s.checkpoints", name)) && (!PlayerInteraction.checkpoints.containsKey(playerName) || PlayerInteraction.checkpoints.get(playerName).size() != plugin.getConfig().getConfigurationSection(String.format("parkours.%s.checkpoints", name)).getKeys(false).size())) {
-            Func.sendMessage(event.getPlayer(), "Nemas vsechny checkpointy");
+            Func.sendMessage(event.getPlayer(), "Nemáš všechny checkpointy");
             return;
         }
         double finalTime = (double)(time - (long) PlayerInteraction.times.get(playerName).get(1))/1000;
@@ -47,10 +48,12 @@ public class ParkourFinish {
         String finalTimeDecimal = fancyFinalTime.split("\\.")[1];
         if (finalTimeDecimal.length() < 3) fancyFinalTime += "0".repeat(3-finalTimeDecimal.length());
         else if (finalTimeDecimal.length() > 3) fancyFinalTime = fancyFinalTime.split(".")[0]+"."+finalTimeDecimal.substring(0, 3);
-        Func.sendMessage(event.getPlayer(), String.format("Dokoncil jsi parkour v case %s sekund.", fancyFinalTime));
+        Func.sendMessage(event.getPlayer(), String.format("Dokončil jsi parkour v čase %s sekund.", fancyFinalTime));
         PlayerInteraction.times.remove(playerName);
         PlayerInteraction.checkpoints.remove(playerName);
         event.getPlayer().getInventory().clear();
         Func.showAll(plugin, event.getPlayer());
+        String[] xyzSpawn = plugin.getConfig().getString(String.format("parkours.%s.spawn", name)).split(" ");
+        event.getPlayer().teleport(new Location(block.getWorld(), Double.valueOf(xyzSpawn[0]), Double.valueOf(xyzSpawn[1]), Double.valueOf(xyzSpawn[2]), Float.parseFloat(xyzSpawn[3]), 0));
     }
 }

@@ -22,3 +22,15 @@ commands:
     description: nastavi ti finish
     usage: /pkfinish <name> [x] [y] [z]
     permission: op
+  pkspawn:
+    description: spawnik
+    usage: /pkspawn <name> [x] [y] [z]
+    permission: op
+  pkmain:
+    description: nastavi jako main parkour
+    usage: /pkmain [name]
+    permission: op
+  pkready:
+    description: je to ready?
+    usage: /pkready <name>
+    permission: op

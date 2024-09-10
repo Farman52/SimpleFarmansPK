@@ -5,10 +5,7 @@ import me.farmans.simplefarmanspk.event.PlayerInteraction;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
-import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
-import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataContainer;
@@ -35,14 +32,13 @@ public class GiveParkourTools {
         ItemMeta leaveData = leave.getItemMeta();
         leaveData.setDisplayName(ChatColor.RED + "Odejít");
         PersistentDataContainer leaveCustomData = leaveData.getPersistentDataContainer();
-        leaveCustomData.set(new NamespacedKey(plugin, "leave"), PersistentDataType.BOOLEAN, true);
+        leaveCustomData.set(new NamespacedKey(plugin, "leave"), PersistentDataType.STRING, name);
         leave.setItemMeta(leaveData);
 
         boolean hidden = false;
         if (plugin.getConfig().contains(String.format("hidden.%s", playerName))) {
             hidden = plugin.getConfig().getBoolean(String.format("hidden.%s", playerName));
         }
-        System.out.println(hidden);
         Material hideMaterial = Material.MAGENTA_DYE;
         String hideText = ChatColor.LIGHT_PURPLE + "Zobrazit hráče";
         String hideKey = "show";

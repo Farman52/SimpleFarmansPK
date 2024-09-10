@@ -33,6 +33,10 @@ public class SetupCommand implements CommandExecutor, TabExecutor {
         Player player = (Player)sender;
         int x, y, z;
         String name = args[0];
+        if (name.equals("null")) {
+            Func.sendMessage(sender, "Zvol jiný jméno parkouru");
+            return true;
+        }
         if (args.length >= 4) {
             x = Integer.parseInt(args[1]);
             y = Integer.parseInt(args[2]);
@@ -46,16 +50,16 @@ public class SetupCommand implements CommandExecutor, TabExecutor {
         Block block = new Location(player.getWorld(), x, y+1, z).getBlock();
 
         if (block.getType() != Material.AIR) {
-            Func.sendMessage(sender, "Nemuzu polozit bro, musi byt vzduch");
+            Func.sendMessage(sender, "Nemůžu položit bro, musí být vzduch");
             return true;
         }
         block.setType(Material.LIGHT_WEIGHTED_PRESSURE_PLATE);
         plugin.getConfig().set(String.format("parkours.%s.start", name), String.format("%s %s %s", x, y+1, z)); //parkours."epicpk".start: X Y Z
-        plugin.getConfig().set(String.format("parkours.%s.ready", name), true);
+        plugin.getConfig().set(String.format("parkours.%s.ready", name), false);
         plugin.saveConfig();
         PersistentDataContainer blockData = new CustomBlockData(block, plugin);
         blockData.set(new NamespacedKey(plugin, "parkourName"), PersistentDataType.STRING, name);
-        Func.sendMessage(sender, "Parkour " + name + " start byl vytvoren");
+        Func.sendMessage(sender, "Parkour " + name + " start byl vytvořen");
 
         return true;
     }

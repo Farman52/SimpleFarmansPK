@@ -1,61 +1,53 @@
 package me.farmans.simplefarmanspk.command;
 
-import com.jeff_media.customblockdata.CustomBlockData;
 import me.farmans.simplefarmanspk.SimpleFarmansPK;
 import me.farmans.simplefarmanspk.util.Func;
 import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.NamespacedKey;
 import org.bukkit.block.Block;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabExecutor;
 import org.bukkit.entity.Player;
-import org.bukkit.persistence.PersistentDataContainer;
-import org.bukkit.persistence.PersistentDataType;
 
 import java.util.Collections;
 import java.util.List;
 
-public class FinishCommand implements CommandExecutor, TabExecutor {
+public class SpawnCommand implements CommandExecutor, TabExecutor {
     SimpleFarmansPK plugin;
-    public FinishCommand(SimpleFarmansPK plugin) { this.plugin = plugin; }
+
+    public SpawnCommand(SimpleFarmansPK plugin) { this.plugin = plugin; }
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if (!label.equalsIgnoreCase("pkfinish") || args.length == 0) return false;
+        if (!label.equalsIgnoreCase("pkspawn") || args.length == 0) return false;
 
+        Player player = (Player)sender;
+        int x, y, z;
+        String f;
         String name = args[0];
         if (!plugin.getConfig().contains(String.format("parkours.%s", name))) {
             Func.sendMessage(sender, "Jméno parkouru neexistuje");
             return true;
         }
-
-        Player player = (Player)sender;
-        int x, y, z;
+        Location loc = player.getLocation();
         if (args.length >= 4) {
             x = Integer.parseInt(args[1]);
             y = Integer.parseInt(args[2]);
             z = Integer.parseInt(args[3]);
+            if (args.length >= 5) f = args[4];
+            else f = String.format("%.1f", loc.getYaw()).replace(",", ".");
         } else {
-            Location loc = player.getLocation();
-            x = loc.getBlockX();
+            x = loc.getBlockX()+1;
             y = loc.getBlockY()-1;
-            z = loc.getBlockZ();
+            z = loc.getBlockZ()+1;
+            f = String.format("%.1f", loc.getYaw()).replace(",", ".");
         }
-        Block block = new Location(player.getWorld(), x, y+1, z).getBlock();
 
-        if (block.getType() != Material.AIR) {
-            Func.sendMessage(sender, "Nemůžu položit bro, musí být vzduch");
-            return true;
-        }
-        block.setType(Material.HEAVY_WEIGHTED_PRESSURE_PLATE);
-        plugin.getConfig().set(String.format("parkours.%s.finish", name), String.format("%s %s %s", x, y+1, z)); //parkours."epicpk".finish: X Y Z
+        plugin.getConfig().set(String.format("parkours.%s.spawn", name), String.format("%s.5 %s %s.5 %s", x, y+1, z, f));
         plugin.saveConfig();
-        PersistentDataContainer blockData = new CustomBlockData(block, plugin);
-        blockData.set(new NamespacedKey(plugin, "parkourName"), PersistentDataType.STRING, name);
-        Func.sendMessage(sender, "Parkour " + name + " finish byl vytvořen");
+
+        Func.sendMessage(sender, String.format("Parkour %s Spawn byl vytvořen", name));
 
         return true;
     }
@@ -77,6 +69,8 @@ public class FinishCommand implements CommandExecutor, TabExecutor {
                 return Collections.singletonList(block.getY() + "");
             case 4:
                 return Collections.singletonList(block.getZ() + "");
+            case 5:
+                return Collections.singletonList(String.format("%.1f", player.getLocation().getYaw()).replace(",", "."));
         }
         return List.of();
     }

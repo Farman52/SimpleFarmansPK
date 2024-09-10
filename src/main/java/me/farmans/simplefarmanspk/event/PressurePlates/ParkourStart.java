@@ -40,7 +40,7 @@ public class ParkourStart {
         }
         PlayerInteraction.times.put(playerName, List.of(name, time));
         if (PlayerInteraction.checkpoints.containsKey(playerName)) PlayerInteraction.checkpoints.remove(playerName);
-        Func.sendMessage(event.getPlayer(), "Zacal jsi skakat, hodne stesti!");
+        Func.sendMessage(event.getPlayer(), "Začal jsi skákat, hodně štěstí!");
         new GiveParkourTools(plugin, event.getPlayer(), name);
     }
 }
