@@ -22,11 +22,16 @@ public class ParkourStart {
         PersistentDataContainer blockData = new CustomBlockData(block, plugin);
         if (!blockData.has(key, PersistentDataType.STRING)) return;
 
+        String name = blockData.get(key, PersistentDataType.STRING);
+        if (!plugin.getConfig().getBoolean(String.format("parkours.%s.ready", name))) {
+            if (event.getPlayer().isOp()) Func.sendMessage(event.getPlayer(), plugin, plugin.getStringConfig().getString("commands.not_ready"));
+            return;
+        }
+
         int x = block.getX();
         int y = block.getY();
         int z = block.getZ();
 
-        String name = blockData.get(key, PersistentDataType.STRING);
 
         String xyz = String.format("%s %s %s", x, y, z);
         if (!plugin.getConfig().contains(String.format("parkours.%s.start", name)) || !plugin.getConfig().getString(String.format("parkours.%s.start", name)).equals(xyz)) {
@@ -35,12 +40,10 @@ public class ParkourStart {
         }
 
         String playerName = event.getPlayer().getName();
-        if (!PlayerInteraction.times.isEmpty() && PlayerInteraction.times.containsKey(playerName)) {
-            PlayerInteraction.times.remove(playerName);
-        }
+        PlayerInteraction.times.remove(playerName);
         PlayerInteraction.times.put(playerName, List.of(name, time));
-        if (PlayerInteraction.checkpoints.containsKey(playerName)) PlayerInteraction.checkpoints.remove(playerName);
-        Func.sendMessage(event.getPlayer(), "Začal jsi skákat, hodně štěstí!");
+        PlayerInteraction.checkpoints.remove(playerName);
+        Func.sendMessage(event.getPlayer(), plugin, plugin.getStringConfig().getString("parkour.start"));
         new GiveParkourTools(plugin, event.getPlayer(), name);
     }
 }

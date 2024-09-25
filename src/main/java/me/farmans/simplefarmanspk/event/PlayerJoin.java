@@ -22,10 +22,10 @@ public class PlayerJoin implements Listener {
         if (plugin.getConfig().contains("hidden")) {
             for (String player : plugin.getConfig().getConfigurationSection("hidden").getKeys(false)) {
                 if (!Bukkit.getPlayer(player).isOnline()) continue;
-                if ((boolean)plugin.getConfig().getConfigurationSection("hidden").getValues(false).get(player) == true) {
-                    Bukkit.getPlayer(player).hidePlayer(event.getPlayer());
+                if ((boolean) plugin.getConfig().getConfigurationSection("hidden").getValues(false).get(player)) {
+                    Bukkit.getPlayer(player).hidePlayer(plugin, event.getPlayer());
                 } else {
-                    Bukkit.getPlayer(player).showPlayer(event.getPlayer());
+                    Bukkit.getPlayer(player).showPlayer(plugin, event.getPlayer());
                 }
             }
         }

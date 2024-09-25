@@ -21,15 +21,19 @@ public class MainCommand implements Listener, TabExecutor {
         String name;
         if (args.length == 0) {
             name = "null";
-            Func.sendMessage(sender, "Zrušil jsi hlavní parkour");
+            Func.sendMessage(sender, plugin, plugin.getStringConfig().getString("commands.main_cancel"));
         }
         else {
             name = args[0];
             if (!plugin.getConfig().contains(String.format("parkours.%s", name))) {
-                Func.sendMessage(sender, "Jméno parkouru neexistuje");
+                Func.sendMessage(sender, plugin, plugin.getStringConfig().getString("commands.unknown_name"));
                 return true;
             }
-            Func.sendMessage(sender, String.format("Nastavil jsi %s jako hlavní parkour", name));
+            else if (!plugin.getConfig().getBoolean(String.format("parkours.%s.ready", name))) {
+                Func.sendMessage(sender, plugin, plugin.getStringConfig().getString("commands.not_ready"));
+                return true;
+            }
+            Func.sendMessage(sender, plugin, String.format(plugin.getStringConfig().getString("commands.main_set"), name));
         }
 
         plugin.getConfig().set("main", name);
@@ -41,13 +45,12 @@ public class MainCommand implements Listener, TabExecutor {
     @Override
     public List<String> onTabComplete(CommandSender sender, Command command, String label, String[] args) {
         List<String> names = Collections.singletonList("name");
-        if (plugin.getConfig().contains("parkours") && plugin.getConfig().getConfigurationSection("parkours").getKeys(false).size() != 0) {
+        if (plugin.getConfig().contains("parkours") && !plugin.getConfig().getConfigurationSection("parkours").getKeys(false).isEmpty()) {
             names = plugin.getConfig().getConfigurationSection("parkours").getKeys(false).stream().toList();
         }
-        switch (args.length) {
-            case 1:
-                return names;
-        }
-        return List.of();
+        return switch (args.length) {
+            case 1 -> names;
+            default -> List.of();
+        };
     }
 }

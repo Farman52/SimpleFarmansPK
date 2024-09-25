@@ -18,7 +18,7 @@ public class GiveParkourTools {
         String playerName = player.getName();
         ItemStack checkpoint = new ItemStack(Material.SLIME_BALL);
         ItemMeta checkpointData = checkpoint.getItemMeta();
-        checkpointData.setDisplayName(ChatColor.GREEN + "Checkpoint");
+        checkpointData.setDisplayName(plugin.getStringConfig().getString("item.checkpoint"));
         PersistentDataContainer checkpointCustomData = checkpointData.getPersistentDataContainer();
         String xyz = plugin.getConfig().getString(String.format("parkours.%s.start", name));
         if (PlayerInteraction.checkpoints.containsKey(playerName)) {
@@ -30,7 +30,7 @@ public class GiveParkourTools {
 
         ItemStack leave = new ItemStack(Material.RED_DYE);
         ItemMeta leaveData = leave.getItemMeta();
-        leaveData.setDisplayName(ChatColor.RED + "Odejít");
+        leaveData.setDisplayName(plugin.getStringConfig().getString("item.leave"));
         PersistentDataContainer leaveCustomData = leaveData.getPersistentDataContainer();
         leaveCustomData.set(new NamespacedKey(plugin, "leave"), PersistentDataType.STRING, name);
         leave.setItemMeta(leaveData);
@@ -40,11 +40,11 @@ public class GiveParkourTools {
             hidden = plugin.getConfig().getBoolean(String.format("hidden.%s", playerName));
         }
         Material hideMaterial = Material.MAGENTA_DYE;
-        String hideText = ChatColor.LIGHT_PURPLE + "Zobrazit hráče";
+        String hideText = plugin.getStringConfig().getString("item.show");
         String hideKey = "show";
-        if (hidden == false) {
+        if (!hidden) {
             hideMaterial = Material.GRAY_DYE;
-            hideText = ChatColor.GRAY + "Skrýt hráče";
+            hideText = plugin.getStringConfig().getString("item.hide");
             hideKey = "hide";
         }
         ItemStack hide = new ItemStack(hideMaterial);

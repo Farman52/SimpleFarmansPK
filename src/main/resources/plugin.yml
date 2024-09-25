@@ -4,6 +4,8 @@ main: me.farmans.simplefarmanspk.SimpleFarmansPK
 api-version: '1.20'
 authors: [Farmans]
 
+softdepend: [PlaceholderAPI]
+
 commands:
   pksetup:
     description: nastav
@@ -33,4 +35,17 @@ commands:
   pkready:
     description: je to ready?
     usage: /pkready <name>
+    permission: op
+  pkdelete:
+    description: odstrani pk
+    usage: /pkdelete <name>
+    permission: op
+  pkhologram:
+    description: hologram lb
+    usage: /pkhologram <name> <spawn|set|remove|add|list> <....>
+    permission: op
+    aliases: [pkholo, pklb, pkleaderboard]
+  pktest:
+    description: tst
+    usage: /pktest
     permission: op

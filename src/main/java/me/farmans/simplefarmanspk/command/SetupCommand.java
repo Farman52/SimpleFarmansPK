@@ -34,7 +34,7 @@ public class SetupCommand implements CommandExecutor, TabExecutor {
         int x, y, z;
         String name = args[0];
         if (name.equals("null")) {
-            Func.sendMessage(sender, "Zvol jiný jméno parkouru");
+            Func.sendMessage(sender, plugin, plugin.getStringConfig().getString("commands.bad_name"));
             return true;
         }
         if (args.length >= 4) {
@@ -50,7 +50,7 @@ public class SetupCommand implements CommandExecutor, TabExecutor {
         Block block = new Location(player.getWorld(), x, y+1, z).getBlock();
 
         if (block.getType() != Material.AIR) {
-            Func.sendMessage(sender, "Nemůžu položit bro, musí být vzduch");
+            Func.sendMessage(sender, plugin, plugin.getStringConfig().getString("commands.bad_place"));
             return true;
         }
         block.setType(Material.LIGHT_WEIGHTED_PRESSURE_PLATE);
@@ -59,7 +59,7 @@ public class SetupCommand implements CommandExecutor, TabExecutor {
         plugin.saveConfig();
         PersistentDataContainer blockData = new CustomBlockData(block, plugin);
         blockData.set(new NamespacedKey(plugin, "parkourName"), PersistentDataType.STRING, name);
-        Func.sendMessage(sender, "Parkour " + name + " start byl vytvořen");
+        Func.sendMessage(sender, plugin, String.format(plugin.getStringConfig().getString("commands.create_start"), name));
 
         return true;
     }
@@ -68,16 +68,12 @@ public class SetupCommand implements CommandExecutor, TabExecutor {
     public List<String> onTabComplete(CommandSender sender, Command command, String label, String[] args) {
         Player player = (Player)sender;
         Block block = player.getTargetBlock(null, 5);
-        switch (args.length) {
-            case 1:
-                return Collections.singletonList("name");
-            case 2:
-                return Collections.singletonList(block.getX() + "");
-            case 3:
-                return Collections.singletonList(block.getY() + "");
-            case 4:
-                return Collections.singletonList(block.getZ() + "");
-        }
-        return List.of();
+        return switch (args.length) {
+            case 1 -> Collections.singletonList("name");
+            case 2 -> Collections.singletonList(block.getX() + "");
+            case 3 -> Collections.singletonList(block.getY() + "");
+            case 4 -> Collections.singletonList(block.getZ() + "");
+            default -> List.of();
+        };
     }
 }

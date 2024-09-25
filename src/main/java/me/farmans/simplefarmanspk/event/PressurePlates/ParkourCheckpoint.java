@@ -4,6 +4,7 @@ import com.jeff_media.customblockdata.CustomBlockData;
 import me.farmans.simplefarmanspk.SimpleFarmansPK;
 import me.farmans.simplefarmanspk.event.PlayerInteraction;
 import me.farmans.simplefarmanspk.util.Func;
+import me.farmans.simplefarmanspk.util.GiveParkourTools;
 import org.bukkit.NamespacedKey;
 import org.bukkit.block.Block;
 import org.bukkit.event.player.PlayerInteractEvent;
@@ -43,7 +44,7 @@ public class ParkourCheckpoint {
         if (!PlayerInteraction.times.containsKey(playerName)) return;
         if (!PlayerInteraction.times.get(playerName).get(0).equals(name)) return;
         if ((PlayerInteraction.checkpoints.containsKey(playerName) && PlayerInteraction.checkpoints.get(playerName).size() != id-1) || (!PlayerInteraction.checkpoints.containsKey(playerName) && id != 1)) {
-            Func.sendMessage(event.getPlayer(), "Přeskočil jsi checkpoint");
+            Func.sendMessage(event.getPlayer(), plugin, plugin.getStringConfig().getString("parkour.skipped_checkpoint"));
             return;
         }
         double finalTime = (double)(time - (long) PlayerInteraction.times.get(playerName).get(1))/1000;
@@ -54,8 +55,8 @@ public class ParkourCheckpoint {
         String fancyFinalTime = String.valueOf(finalTime);
         String finalTimeDecimal = fancyFinalTime.split("\\.")[1];
         if (finalTimeDecimal.length() < 3) fancyFinalTime += "0".repeat(3-finalTimeDecimal.length());
-        else if (finalTimeDecimal.length() > 3) fancyFinalTime = fancyFinalTime.split(".")[0]+"."+finalTimeDecimal.substring(0, 3);
-        Func.sendMessage(event.getPlayer(), String.format("Dosáhl jsi %s. checkpointu v čase %ss", PlayerInteraction.checkpoints.get(playerName).size(), fancyFinalTime));
-
+        else if (finalTimeDecimal.length() > 3) fancyFinalTime = fancyFinalTime.split("\\.")[0]+"."+finalTimeDecimal.substring(0, 3);
+        Func.sendMessage(event.getPlayer(), plugin, String.format(plugin.getStringConfig().getString("parkour.checkpoint_reached"), PlayerInteraction.checkpoints.get(playerName).size(), fancyFinalTime));
+        new GiveParkourTools(plugin, event.getPlayer(), name);
     }
 }

@@ -28,7 +28,7 @@ public class FinishCommand implements CommandExecutor, TabExecutor {
 
         String name = args[0];
         if (!plugin.getConfig().contains(String.format("parkours.%s", name))) {
-            Func.sendMessage(sender, "Jméno parkouru neexistuje");
+            Func.sendMessage(sender, plugin, plugin.getStringConfig().getString("commands.unknown_name"));
             return true;
         }
 
@@ -47,7 +47,7 @@ public class FinishCommand implements CommandExecutor, TabExecutor {
         Block block = new Location(player.getWorld(), x, y+1, z).getBlock();
 
         if (block.getType() != Material.AIR) {
-            Func.sendMessage(sender, "Nemůžu položit bro, musí být vzduch");
+            Func.sendMessage(sender, plugin, plugin.getStringConfig().getString("commands.bad_place"));
             return true;
         }
         block.setType(Material.HEAVY_WEIGHTED_PRESSURE_PLATE);
@@ -55,7 +55,7 @@ public class FinishCommand implements CommandExecutor, TabExecutor {
         plugin.saveConfig();
         PersistentDataContainer blockData = new CustomBlockData(block, plugin);
         blockData.set(new NamespacedKey(plugin, "parkourName"), PersistentDataType.STRING, name);
-        Func.sendMessage(sender, "Parkour " + name + " finish byl vytvořen");
+        Func.sendMessage(sender, plugin, String.format(plugin.getStringConfig().getString("commands.create_finish"), name));
 
         return true;
     }
@@ -65,19 +65,15 @@ public class FinishCommand implements CommandExecutor, TabExecutor {
         Player player = (Player)sender;
         Block block = player.getTargetBlock(null, 5);
         List<String> names = Collections.singletonList("name");
-        if (plugin.getConfig().contains("parkours") && plugin.getConfig().getConfigurationSection("parkours").getKeys(false).size() != 0) {
+        if (plugin.getConfig().contains("parkours") && !plugin.getConfig().getConfigurationSection("parkours").getKeys(false).isEmpty()) {
             names = plugin.getConfig().getConfigurationSection("parkours").getKeys(false).stream().toList();
         }
-        switch (args.length) {
-            case 1:
-                return names;
-            case 2:
-                return Collections.singletonList(block.getX() + "");
-            case 3:
-                return Collections.singletonList(block.getY() + "");
-            case 4:
-                return Collections.singletonList(block.getZ() + "");
-        }
-        return List.of();
+        return switch (args.length) {
+            case 1 -> names;
+            case 2 -> Collections.singletonList(block.getX() + "");
+            case 3 -> Collections.singletonList(block.getY() + "");
+            case 4 -> Collections.singletonList(block.getZ() + "");
+            default -> List.of();
+        };
     }
 }

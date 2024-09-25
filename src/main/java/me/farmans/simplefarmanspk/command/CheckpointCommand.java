@@ -29,7 +29,7 @@ public class CheckpointCommand implements CommandExecutor, TabExecutor {
 
         String name = args[0];
         if (!plugin.getConfig().contains(String.format("parkours.%s", name))) {
-            Func.sendMessage(sender, "Jméno parkouru neexistuje");
+            Func.sendMessage(sender, plugin, plugin.getStringConfig().getString("commands.unknown_name"));
             return true;
         }
 
@@ -39,12 +39,12 @@ public class CheckpointCommand implements CommandExecutor, TabExecutor {
             id = Integer.parseInt(args[1]);
             if (plugin.getConfig().contains(String.format("parkours.%s.checkpoints", name))) {
                 if (id > 1+plugin.getConfig().getConfigurationSection(String.format("parkours.%s.checkpoints", name)).getKeys(false).size()) {
-                    Func.sendMessage(sender, "Počet checkpointu nevychazi");
+                    Func.sendMessage(sender, plugin, plugin.getStringConfig().getString("commands.checkpoint_bad_count"));
                     return true;
                 }
             } else {
                 if (id != 1) {
-                    Func.sendMessage(sender, "Počet checkpointu nevychazi");
+                    Func.sendMessage(sender, plugin, plugin.getStringConfig().getString("commands.checkpoint_bad_count"));
                     return true;
                 }
             }
@@ -58,12 +58,12 @@ public class CheckpointCommand implements CommandExecutor, TabExecutor {
             id = Integer.parseInt(args[1]);
             if (plugin.getConfig().contains(String.format("parkours.%s.checkpoints", name))) {
                 if (id > 1+plugin.getConfig().getConfigurationSection(String.format("parkours.%s.checkpoints", name)).getKeys(false).size()) {
-                    Func.sendMessage(sender, "Počet checkpointu nevychazi");
+                    Func.sendMessage(sender, plugin, plugin.getStringConfig().getString("commands.checkpoint_bad_count"));
                     return true;
                 }
             } else {
                 if (id != 1) {
-                    Func.sendMessage(sender, "Počet checkpointů nevychází");
+                    Func.sendMessage(sender, plugin, plugin.getStringConfig().getString("commands.checkpoint_bad_count"));
                     return true;
                 }
             }
@@ -81,7 +81,7 @@ public class CheckpointCommand implements CommandExecutor, TabExecutor {
         Block block = new Location(player.getWorld(), x, y+1, z).getBlock();
 
         if (block.getType() != Material.AIR) {
-            Func.sendMessage(sender, "Nemůžu položit bro, musí být vzduch");
+            Func.sendMessage(sender, plugin, plugin.getStringConfig().getString("commands.bad_place"));
             return true;
         }
         plugin.getConfig().set(String.format("parkours.%s.checkpoints.%s", name, id), String.format("%s %s %s", x, y+1, z));
@@ -91,7 +91,7 @@ public class CheckpointCommand implements CommandExecutor, TabExecutor {
         PersistentDataContainer blockData = new CustomBlockData(block, plugin);
         blockData.set(new NamespacedKey(plugin, "parkourName"), PersistentDataType.STRING, name);
         blockData.set(new NamespacedKey(plugin, "checkpointId"), PersistentDataType.INTEGER, id);
-        Func.sendMessage(sender, "Parkour " + name + " Checkpoint " + id + " byl vytvořen");
+        Func.sendMessage(sender, plugin, plugin.getStringConfig().getString("commands.create_checkpoint"));
 
 
         return true;
@@ -102,21 +102,16 @@ public class CheckpointCommand implements CommandExecutor, TabExecutor {
         Player player = (Player)sender;
         Block block = player.getTargetBlock(null, 5);
         List<String> names = Collections.singletonList("name");
-        if (plugin.getConfig().contains("parkours") && plugin.getConfig().getConfigurationSection("parkours").getKeys(false).size() != 0) {
+        if (plugin.getConfig().contains("parkours") && !plugin.getConfig().getConfigurationSection("parkours").getKeys(false).isEmpty()) {
             names = plugin.getConfig().getConfigurationSection("parkours").getKeys(false).stream().toList();
         }
-        switch (args.length) {
-            case 1:
-                return names;
-            case 2:
-                return Collections.singletonList("count");
-            case 3:
-                return Collections.singletonList(block.getX()+"");
-            case 4:
-                return Collections.singletonList(block.getY()+"");
-            case 5:
-                return Collections.singletonList(block.getZ()+"");
-        }
-        return List.of();
+        return switch (args.length) {
+            case 1 -> names;
+            case 2 -> Collections.singletonList("count");
+            case 3 -> Collections.singletonList(block.getX() + "");
+            case 4 -> Collections.singletonList(block.getY() + "");
+            case 5 -> Collections.singletonList(block.getZ() + "");
+            default -> List.of();
+        };
     }
 }

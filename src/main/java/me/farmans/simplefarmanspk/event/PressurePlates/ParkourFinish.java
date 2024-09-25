@@ -36,24 +36,24 @@ public class ParkourFinish {
         if (!PlayerInteraction.times.containsKey(playerName)) return;
         if (!PlayerInteraction.times.get(playerName).get(0).equals(name)) return;
         if (plugin.getConfig().contains(String.format("parkours.%s.checkpoints", name)) && (!PlayerInteraction.checkpoints.containsKey(playerName) || PlayerInteraction.checkpoints.get(playerName).size() != plugin.getConfig().getConfigurationSection(String.format("parkours.%s.checkpoints", name)).getKeys(false).size())) {
-            Func.sendMessage(event.getPlayer(), "Nemáš všechny checkpointy");
+            Func.sendMessage(event.getPlayer(), plugin,plugin.getStringConfig().getString("parkour.missing_checkpoints"));
             return;
         }
         double finalTime = (double)(time - (long) PlayerInteraction.times.get(playerName).get(1))/1000;
-        if (!plugin.getConfig().contains(String.format("parkours.%s.lb.%s", name, playerName)) || plugin.getConfig().getDouble(String.format("parkours.%s.lb.%s", name, playerName)) > finalTime) {
-            plugin.getConfig().set(String.format("parkours.%s.lb.%s", name, playerName), finalTime);
+        if (!plugin.getConfig().contains(String.format("parkours.%s.times.%s", name, playerName)) || plugin.getConfig().getDouble(String.format("parkours.%s.times.%s", name, playerName)) > finalTime) {
+            plugin.getConfig().set(String.format("parkours.%s.times.%s", name, playerName), finalTime);
             plugin.saveConfig();
         }
         String fancyFinalTime = String.valueOf(finalTime);
         String finalTimeDecimal = fancyFinalTime.split("\\.")[1];
         if (finalTimeDecimal.length() < 3) fancyFinalTime += "0".repeat(3-finalTimeDecimal.length());
-        else if (finalTimeDecimal.length() > 3) fancyFinalTime = fancyFinalTime.split(".")[0]+"."+finalTimeDecimal.substring(0, 3);
-        Func.sendMessage(event.getPlayer(), String.format("Dokončil jsi parkour v čase %s sekund.", fancyFinalTime));
+        else if (finalTimeDecimal.length() > 3) fancyFinalTime = fancyFinalTime.split("\\.")[0]+"."+finalTimeDecimal.substring(0, 3);
+        Func.sendMessage(event.getPlayer(), plugin, String.format(plugin.getStringConfig().getString("parkour.finish"), fancyFinalTime));
         PlayerInteraction.times.remove(playerName);
         PlayerInteraction.checkpoints.remove(playerName);
         event.getPlayer().getInventory().clear();
         Func.showAll(plugin, event.getPlayer());
         String[] xyzSpawn = plugin.getConfig().getString(String.format("parkours.%s.spawn", name)).split(" ");
-        event.getPlayer().teleport(new Location(block.getWorld(), Double.valueOf(xyzSpawn[0]), Double.valueOf(xyzSpawn[1]), Double.valueOf(xyzSpawn[2]), Float.parseFloat(xyzSpawn[3]), 0));
+        event.getPlayer().teleport(new Location(block.getWorld(), Double.parseDouble(xyzSpawn[0]), Double.parseDouble(xyzSpawn[1]), Double.parseDouble(xyzSpawn[2]), Float.parseFloat(xyzSpawn[3]), 0));
     }
 }

@@ -15,12 +15,8 @@ public class PlayerLeave implements Listener {
     public void onPlayerLeave(PlayerQuitEvent event) {
         String playerName = event.getPlayer().getName();
 
-        if (PlayerInteraction.times.containsKey(playerName)) {
-            PlayerInteraction.times.remove(playerName);
-        }
-        if (PlayerInteraction.checkpoints.containsKey(playerName)) {
-            PlayerInteraction.checkpoints.remove(playerName);
-        }
+        PlayerInteraction.times.remove(playerName);
+        PlayerInteraction.checkpoints.remove(playerName);
         event.getPlayer().getInventory().clear();
         Func.showAll(plugin, event.getPlayer());
     }

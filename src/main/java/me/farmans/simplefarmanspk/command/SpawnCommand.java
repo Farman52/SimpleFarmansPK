@@ -27,7 +27,7 @@ public class SpawnCommand implements CommandExecutor, TabExecutor {
         String f;
         String name = args[0];
         if (!plugin.getConfig().contains(String.format("parkours.%s", name))) {
-            Func.sendMessage(sender, "Jméno parkouru neexistuje");
+            Func.sendMessage(sender, plugin, plugin.getStringConfig().getString("commands.unknown_name"));
             return true;
         }
         Location loc = player.getLocation();
@@ -47,7 +47,7 @@ public class SpawnCommand implements CommandExecutor, TabExecutor {
         plugin.getConfig().set(String.format("parkours.%s.spawn", name), String.format("%s.5 %s %s.5 %s", x, y+1, z, f));
         plugin.saveConfig();
 
-        Func.sendMessage(sender, String.format("Parkour %s Spawn byl vytvořen", name));
+        Func.sendMessage(sender, plugin, String.format(plugin.getStringConfig().getString("commands.create_spawn"), name));
 
         return true;
     }
@@ -57,21 +57,16 @@ public class SpawnCommand implements CommandExecutor, TabExecutor {
         Player player = (Player)sender;
         Block block = player.getTargetBlock(null, 5);
         List<String> names = Collections.singletonList("name");
-        if (plugin.getConfig().contains("parkours") && plugin.getConfig().getConfigurationSection("parkours").getKeys(false).size() != 0) {
+        if (plugin.getConfig().contains("parkours") && !plugin.getConfig().getConfigurationSection("parkours").getKeys(false).isEmpty()) {
             names = plugin.getConfig().getConfigurationSection("parkours").getKeys(false).stream().toList();
         }
-        switch (args.length) {
-            case 1:
-                return names;
-            case 2:
-                return Collections.singletonList(block.getX() + "");
-            case 3:
-                return Collections.singletonList(block.getY() + "");
-            case 4:
-                return Collections.singletonList(block.getZ() + "");
-            case 5:
-                return Collections.singletonList(String.format("%.1f", player.getLocation().getYaw()).replace(",", "."));
-        }
-        return List.of();
+        return switch (args.length) {
+            case 1 -> names;
+            case 2 -> Collections.singletonList(block.getX() + "");
+            case 3 -> Collections.singletonList(block.getY() + "");
+            case 4 -> Collections.singletonList(block.getZ() + "");
+            case 5 -> Collections.singletonList(String.format("%.1f", player.getLocation().getYaw()).replace(",", "."));
+            default -> List.of();
+        };
     }
 }
