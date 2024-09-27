@@ -28,6 +28,14 @@ public class SetupStringConfig {
         yml.addDefault("commands.main_set", "Nastavil jsi %s jako hlavní parkour");
         yml.addDefault("commands.delete", "Smazal jsi parkour %s");
         yml.addDefault("commands.checkpoint_bad_count", "Počet checkpointů nevychází");
+        yml.addDefault("commands.checkpoint_delete", "Checkpoint %s byl ostraněn");
+        yml.addDefault("commands.bad_hologram", "Není nastavený leaderboard");
+        yml.addDefault("commands.reload_hologram", "Hologram %s byl reloadnut");
+        yml.addDefault("commands.delete_hologram", "Smazal jsi hologram %s");
+        yml.addDefault("commands.delete_line_hologram", "Řádek %s ostraněn");
+        yml.addDefault("commands.hologram_bad_count", "Počet řádků neodpovídá");
+        yml.addDefault("commands.hologram_set_line", "Text \'%s§r\' nastaven na řádek %s");
+        yml.addDefault("commands.hologram_max_lines", "Maximální počet řádků byl dosažen");
         yml.addDefault("parkour.start", "Začal jsi skákat, hodně štěstí!");
         yml.addDefault("parkour.missing_checkpoints", "Nemáš všechny checkpointy");
         yml.addDefault("parkour.finish", "Dokončil jsi parkour v čase %s sekund.");

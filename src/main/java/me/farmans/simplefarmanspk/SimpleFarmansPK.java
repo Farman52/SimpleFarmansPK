@@ -6,6 +6,7 @@ import me.farmans.simplefarmanspk.event.PlayerInteraction;
 import me.farmans.simplefarmanspk.event.PlayerJoin;
 import me.farmans.simplefarmanspk.event.PlayerLeave;
 import me.farmans.simplefarmanspk.util.Func;
+import me.farmans.simplefarmanspk.util.SetupSettingsConfig;
 import me.farmans.simplefarmanspk.util.SetupStringConfig;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -19,6 +20,8 @@ import java.util.logging.Level;
 public final class SimpleFarmansPK extends JavaPlugin {
     private YamlConfiguration stringConfig;
     private File stringFile;
+    private YamlConfiguration settingsConfig;
+    private File settingsFile;
 
     @Override
     public void onEnable() {
@@ -26,6 +29,9 @@ public final class SimpleFarmansPK extends JavaPlugin {
         stringFile = new File(getDataFolder(), "strings.yml");
         createStringConfig();
         reloadStringConfig();
+        settingsFile = new File(getDataFolder(), "settings.yml");
+        createSettingsConfig();
+        reloadSettingsConfig();
 
         this.getConfig().addDefault("main", "null");
 
@@ -38,7 +44,6 @@ public final class SimpleFarmansPK extends JavaPlugin {
         getCommand("pkready").setExecutor(new ReadyCommand(this));
         getCommand("pkdelete").setExecutor(new DeleteCommand(this));
         getCommand("pkhologram").setExecutor(new HologramCommand(this));
-        getCommand("pktest").setExecutor(new TestCommand());
 
         getServer().getPluginManager().registerEvents(new PlayerInteraction(this), this);
         getServer().getPluginManager().registerEvents(new BlockBreak(this), this);
@@ -70,6 +75,34 @@ public final class SimpleFarmansPK extends JavaPlugin {
     public void saveStringConfig() {
         try {
             getStringConfig().save(this.stringFile);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private void createSettingsConfig() {
+        if (!this.settingsFile.exists()) {
+            try {
+                this.settingsFile.createNewFile();
+                this.reloadSettingsConfig();
+                new SetupSettingsConfig(this.settingsConfig);
+                this.settingsConfig.options().copyDefaults(true);
+                this.settingsConfig.save(settingsFile);
+            } catch (IOException e) {
+                Bukkit.getLogger().log(Level.SEVERE, "Chyba při vytváření settings.yml");
+                e.printStackTrace();
+            }
+        }
+    }
+    public FileConfiguration getSettingsConfig() {
+        return this.settingsConfig;
+    }
+    public void reloadSettingsConfig() {
+        this.settingsConfig = YamlConfiguration.loadConfiguration(this.settingsFile);
+    }
+    public void saveSettingsConfig() {
+        try {
+            getSettingsConfig().save(this.settingsFile);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

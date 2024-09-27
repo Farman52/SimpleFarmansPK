@@ -17,7 +17,7 @@ commands:
     permission: op
   pkcheckpoint:
     description: nastavi ti cp
-    usage: /pkcheckpoint <name> [id] [x] [y] [z]
+    usage: /pkcheckpoint <name> [id] [x] [y] [z] [remove]
     permission: op
     aliases: [pkcp]
   pkfinish:
@@ -42,10 +42,6 @@ commands:
     permission: op
   pkhologram:
     description: hologram lb
-    usage: /pkhologram <name> <spawn|set|remove|add|list> <....>
+    usage: /pkhologram <name> <spawn | set | remove | add | list | delete | reload> <....>
     permission: op
     aliases: [pkholo, pklb, pkleaderboard]
-  pktest:
-    description: tst
-    usage: /pktest
-    permission: op

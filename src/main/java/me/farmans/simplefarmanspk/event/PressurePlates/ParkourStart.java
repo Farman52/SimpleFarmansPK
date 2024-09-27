@@ -4,7 +4,6 @@ import com.jeff_media.customblockdata.CustomBlockData;
 import me.farmans.simplefarmanspk.SimpleFarmansPK;
 import me.farmans.simplefarmanspk.event.PlayerInteraction;
 import me.farmans.simplefarmanspk.util.Func;
-import me.farmans.simplefarmanspk.util.GiveParkourTools;
 import org.bukkit.NamespacedKey;
 import org.bukkit.block.Block;
 import org.bukkit.event.player.PlayerInteractEvent;
@@ -44,6 +43,6 @@ public class ParkourStart {
         PlayerInteraction.times.put(playerName, List.of(name, time));
         PlayerInteraction.checkpoints.remove(playerName);
         Func.sendMessage(event.getPlayer(), plugin, plugin.getStringConfig().getString("parkour.start"));
-        new GiveParkourTools(plugin, event.getPlayer(), name);
+        Func.giveParkourTools(plugin, event.getPlayer(), name);
     }
 }

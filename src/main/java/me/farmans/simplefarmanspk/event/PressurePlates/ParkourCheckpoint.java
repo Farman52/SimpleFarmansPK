@@ -4,7 +4,6 @@ import com.jeff_media.customblockdata.CustomBlockData;
 import me.farmans.simplefarmanspk.SimpleFarmansPK;
 import me.farmans.simplefarmanspk.event.PlayerInteraction;
 import me.farmans.simplefarmanspk.util.Func;
-import me.farmans.simplefarmanspk.util.GiveParkourTools;
 import org.bukkit.NamespacedKey;
 import org.bukkit.block.Block;
 import org.bukkit.event.player.PlayerInteractEvent;
@@ -57,6 +56,6 @@ public class ParkourCheckpoint {
         if (finalTimeDecimal.length() < 3) fancyFinalTime += "0".repeat(3-finalTimeDecimal.length());
         else if (finalTimeDecimal.length() > 3) fancyFinalTime = fancyFinalTime.split("\\.")[0]+"."+finalTimeDecimal.substring(0, 3);
         Func.sendMessage(event.getPlayer(), plugin, String.format(plugin.getStringConfig().getString("parkour.checkpoint_reached"), PlayerInteraction.checkpoints.get(playerName).size(), fancyFinalTime));
-        new GiveParkourTools(plugin, event.getPlayer(), name);
+        Func.giveParkourTools(plugin, event.getPlayer(), name);
     }
 }

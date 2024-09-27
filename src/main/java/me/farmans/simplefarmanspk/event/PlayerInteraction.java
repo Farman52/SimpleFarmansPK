@@ -5,7 +5,6 @@ import me.farmans.simplefarmanspk.event.PressurePlates.ParkourCheckpoint;
 import me.farmans.simplefarmanspk.event.PressurePlates.ParkourFinish;
 import me.farmans.simplefarmanspk.event.PressurePlates.ParkourStart;
 import me.farmans.simplefarmanspk.util.Func;
-import me.farmans.simplefarmanspk.util.GiveParkourTools;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
@@ -31,7 +30,6 @@ public class PlayerInteraction implements Listener {
     public static Map<String, Map<String, Double>> checkpoints = new HashMap<>(); // NAME: XYZ: TIME
 
     public Map<String, Long> cooldowns = new HashMap<>();
-    public final int COOLDOWN = 1;
 
     @EventHandler
     public void onPlayerInteraction(PlayerInteractEvent event) {
@@ -53,15 +51,17 @@ public class PlayerInteraction implements Listener {
                 event.getPlayer().teleport(new Location(event.getPlayer().getWorld(), Float.parseFloat(xyz[0])+0.5, Float.parseFloat(xyz[1]), Float.parseFloat(xyz[2])+0.5, event.getPlayer().getLocation().getYaw(), event.getPlayer().getLocation().getPitch()));
             } else if (itemData.has(new NamespacedKey(plugin, "hide"), PersistentDataType.BOOLEAN)) {
                 event.setCancelled(true);
-                if (cooldowns.containsKey(playerName) && (System.currentTimeMillis() - cooldowns.get(playerName))/1000 < COOLDOWN) return;
+                final double COOLDOWN = plugin.getSettingsConfig().getInt("visibility_cooldown");
+                if (cooldowns.containsKey(playerName) && (System.currentTimeMillis() - (double)cooldowns.get(playerName))/1000 < COOLDOWN) return;
                 Func.hideAll(plugin, event.getPlayer());
-                new GiveParkourTools(plugin, event.getPlayer(), (String) times.get(playerName).get(0));
+                Func.giveParkourTools(plugin, event.getPlayer(), (String) times.get(playerName).get(0));
                 cooldowns.put(playerName, System.currentTimeMillis());
             } else if (itemData.has(new NamespacedKey(plugin, "show"), PersistentDataType.BOOLEAN)) {
                 event.setCancelled(true);
-                if (cooldowns.containsKey(playerName) && (System.currentTimeMillis() - cooldowns.get(playerName))/1000 < COOLDOWN) return;
+                final double COOLDOWN = plugin.getSettingsConfig().getInt("visibility_cooldown");
+                if (cooldowns.containsKey(playerName) && (System.currentTimeMillis() - (double)cooldowns.get(playerName))/1000 < COOLDOWN) return;
                 Func.showAll(plugin, event.getPlayer());
-                new GiveParkourTools(plugin, event.getPlayer(), (String) times.get(playerName).get(0));
+                Func.giveParkourTools(plugin, event.getPlayer(), (String) times.get(playerName).get(0));
                 cooldowns.put(playerName, System.currentTimeMillis());
             } else if (itemData.has(new NamespacedKey(plugin, "leave"), PersistentDataType.STRING)) {
                 event.setCancelled(true);

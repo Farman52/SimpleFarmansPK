@@ -51,6 +51,9 @@ public class ParkourFinish {
         Func.sendMessage(event.getPlayer(), plugin, String.format(plugin.getStringConfig().getString("parkour.finish"), fancyFinalTime));
         PlayerInteraction.times.remove(playerName);
         PlayerInteraction.checkpoints.remove(playerName);
+        if (plugin.getConfig().contains(String.format("parkours.%s.lb_coords", name))) {
+            Func.spawnLeaderboard(event.getPlayer(), plugin, name);
+        }
         event.getPlayer().getInventory().clear();
         Func.showAll(plugin, event.getPlayer());
         String[] xyzSpawn = plugin.getConfig().getString(String.format("parkours.%s.spawn", name)).split(" ");
