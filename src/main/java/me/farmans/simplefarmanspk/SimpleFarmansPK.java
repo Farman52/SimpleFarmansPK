@@ -34,6 +34,8 @@ public final class SimpleFarmansPK extends JavaPlugin {
         reloadSettingsConfig();
 
         this.getConfig().addDefault("main", "null");
+        this.getConfig().options().copyDefaults(true);
+        this.saveConfig();
 
         getCommand("pksetup").setExecutor(new SetupCommand(this));
         getCommand("pkreload").setExecutor(new ReloadCommand(this));
