@@ -7,7 +7,7 @@ public class SetupStringConfig {
         yml.addDefault("chat_message", "§9§lSFPK > §r%s");
         yml.addDefault("action_bar", "§bTvůj čas: §r%ss");
         yml.addDefault("item.checkpoint", "§aCheckpoint");
-        yml.addDefault("item.leave", "§cOdejít");
+        yml.addDefault("item.leave", "§cRestart");
         yml.addDefault("item.show", "§dZobrazit hráče");
         yml.addDefault("item.hide", "§7Skrýt hráče");
         yml.addDefault("hologram.nobody", "Zatím nikdo");

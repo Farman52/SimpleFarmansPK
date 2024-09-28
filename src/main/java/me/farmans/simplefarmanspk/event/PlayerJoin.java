@@ -3,6 +3,7 @@ package me.farmans.simplefarmanspk.event;
 import me.farmans.simplefarmanspk.SimpleFarmansPK;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
@@ -20,12 +21,13 @@ public class PlayerJoin implements Listener {
             event.getPlayer().teleport(new Location(event.getPlayer().getWorld(), Float.parseFloat(xyzf[0]), Float.parseFloat(xyzf[1]), Float.parseFloat(xyzf[2]), Float.parseFloat(xyzf[3]), 0));
         }
         if (plugin.getConfig().contains("hidden")) {
-            for (String player : plugin.getConfig().getConfigurationSection("hidden").getKeys(false)) {
-                if (!Bukkit.getPlayer(player).isOnline()) continue;
-                if ((boolean) plugin.getConfig().getConfigurationSection("hidden").getValues(false).get(player)) {
-                    Bukkit.getPlayer(player).hidePlayer(plugin, event.getPlayer());
+            for (String p : plugin.getConfig().getConfigurationSection("hidden").getKeys(false)) {
+                Player player = Bukkit.getPlayer(p);
+                if (player == null || !player.isOnline()) continue;
+                if ((boolean) plugin.getConfig().getConfigurationSection("hidden").getValues(false).get(p)) {
+                    player.hidePlayer(plugin, event.getPlayer());
                 } else {
-                    Bukkit.getPlayer(player).showPlayer(plugin, event.getPlayer());
+                    player.showPlayer(plugin, event.getPlayer());
                 }
             }
         }

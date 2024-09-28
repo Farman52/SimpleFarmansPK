@@ -129,7 +129,7 @@ public class Func {
         ItemMeta checkpointData = checkpoint.getItemMeta();
         checkpointData.setDisplayName(plugin.getStringConfig().getString("item.checkpoint"));
         PersistentDataContainer checkpointCustomData = checkpointData.getPersistentDataContainer();
-        String xyz = plugin.getConfig().getString(String.format("parkours.%s.start", name));
+        String xyz = plugin.getConfig().getString(String.format("parkours.%s.spawn", name));
         if (PlayerInteraction.checkpoints.containsKey(playerName)) {
             int id = PlayerInteraction.checkpoints.get(playerName).size();
             xyz = plugin.getConfig().getString(String.format("parkours.%s.checkpoints.%s", name, id));

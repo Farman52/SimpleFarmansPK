@@ -48,7 +48,15 @@ public class PlayerInteraction implements Listener {
             if (itemData.has(new NamespacedKey(plugin, "checkpoint"), PersistentDataType.STRING)) {
                 event.setCancelled(true);
                 String[] xyz = itemData.get(new NamespacedKey(plugin, "checkpoint"), PersistentDataType.STRING).split(" ");
-                event.getPlayer().teleport(new Location(event.getPlayer().getWorld(), Float.parseFloat(xyz[0])+0.5, Float.parseFloat(xyz[1]), Float.parseFloat(xyz[2])+0.5, event.getPlayer().getLocation().getYaw(), event.getPlayer().getLocation().getPitch()));
+                float yaw = event.getPlayer().getLocation().getYaw();
+                double x = Float.parseFloat(xyz[0])+0.5;
+                double z = Float.parseFloat(xyz[2])+0.5;
+                if (xyz.length == 4) {
+                    yaw = Float.parseFloat(xyz[3]);
+                    x = Float.parseFloat(xyz[0]);
+                    z = Float.parseFloat(xyz[2]);
+                }
+                event.getPlayer().teleport(new Location(event.getPlayer().getWorld(), x, Float.parseFloat(xyz[1]), z, yaw, 0));
             } else if (itemData.has(new NamespacedKey(plugin, "hide"), PersistentDataType.BOOLEAN)) {
                 event.setCancelled(true);
                 final double COOLDOWN = plugin.getSettingsConfig().getInt("visibility_cooldown");
@@ -65,15 +73,10 @@ public class PlayerInteraction implements Listener {
                 cooldowns.put(playerName, System.currentTimeMillis());
             } else if (itemData.has(new NamespacedKey(plugin, "leave"), PersistentDataType.STRING)) {
                 event.setCancelled(true);
-                event.getPlayer().getInventory().clear();
-                PlayerInteraction.times.remove(playerName);
-                PlayerInteraction.checkpoints.remove(playerName);
-                Func.showAll(plugin, event.getPlayer());
                 String name = itemData.get(new NamespacedKey(plugin, "leave"), PersistentDataType.STRING);
                 String[] xyzf = plugin.getConfig().getString(String.format("parkours.%s.spawn", name)).split(" ");
                 event.getPlayer().teleport(new Location(event.getPlayer().getWorld(), Float.parseFloat(xyzf[0]), Float.parseFloat(xyzf[1]), Float.parseFloat(xyzf[2]), Float.parseFloat(xyzf[3]), 0));
-
-            } else return;
+            }
         }
     }
 }
