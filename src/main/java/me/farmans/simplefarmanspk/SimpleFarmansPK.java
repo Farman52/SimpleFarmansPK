@@ -6,6 +6,7 @@ import me.farmans.simplefarmanspk.event.PlayerInteraction;
 import me.farmans.simplefarmanspk.event.PlayerJoin;
 import me.farmans.simplefarmanspk.event.PlayerLeave;
 import me.farmans.simplefarmanspk.util.Func;
+import me.farmans.simplefarmanspk.util.MongoDB;
 import me.farmans.simplefarmanspk.util.SetupSettingsConfig;
 import me.farmans.simplefarmanspk.util.SetupStringConfig;
 import org.bukkit.Bukkit;
@@ -52,6 +53,7 @@ public final class SimpleFarmansPK extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new PlayerLeave(this), this);
         getServer().getPluginManager().registerEvents(new PlayerJoin(this), this);
         Func.updateActionBar(this);
+        MongoDB.main(this);
     }
 
     private void createStringConfig() {

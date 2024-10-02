@@ -8,6 +8,8 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 
+import java.util.UUID;
+
 public class PlayerJoin implements Listener {
     SimpleFarmansPK plugin;
 
@@ -22,7 +24,7 @@ public class PlayerJoin implements Listener {
         }
         if (plugin.getConfig().contains("hidden")) {
             for (String p : plugin.getConfig().getConfigurationSection("hidden").getKeys(false)) {
-                Player player = Bukkit.getPlayer(p);
+                Player player = Bukkit.getPlayer(UUID.fromString(p));
                 if (player == null || !player.isOnline()) continue;
                 if ((boolean) plugin.getConfig().getConfigurationSection("hidden").getValues(false).get(p)) {
                     player.hidePlayer(plugin, event.getPlayer());

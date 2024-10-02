@@ -47,14 +47,14 @@ public class Func {
         for (Player online : Bukkit.getOnlinePlayers()) {
             player.hidePlayer(plugin, online);
         }
-        plugin.getConfig().set(String.format("hidden.%s", player.getName()), true);
+        plugin.getConfig().set(String.format("hidden.%s", player.getUniqueId()), true);
         plugin.saveConfig();
     }
     public static void showAll(SimpleFarmansPK plugin, Player player) {
         for (Player online : Bukkit.getOnlinePlayers()) {
             player.showPlayer(plugin, online);
         }
-        plugin.getConfig().set(String.format("hidden.%s", player.getName()), false);
+        plugin.getConfig().set(String.format("hidden.%s", player.getUniqueId()), false);
         plugin.saveConfig();
     }
 
@@ -100,8 +100,9 @@ public class Func {
                 if (sortedMap.keySet().toArray().length <= count) {
                     text = String.format(text, plugin.getStringConfig().getString("hologram.nobody"));
                 } else {
-                    String playerName = (String) sortedMap.keySet().toArray()[count];
-                    String time = sortedMap.get(playerName).toString();
+                    String uuid = (String) sortedMap.keySet().toArray()[count];
+                    String playerName = Bukkit.getOfflinePlayer(UUID.fromString(uuid)).getName();
+                    String time = sortedMap.get(uuid).toString();
                     String finalTimeDecimal = time.split("\\.")[1];
                     if (finalTimeDecimal.length() < 3) time += "0".repeat(3 - finalTimeDecimal.length());
                     else if (finalTimeDecimal.length() > 3)
@@ -145,8 +146,8 @@ public class Func {
         leave.setItemMeta(leaveData);
 
         boolean hidden = false;
-        if (plugin.getConfig().contains(String.format("hidden.%s", playerName))) {
-            hidden = plugin.getConfig().getBoolean(String.format("hidden.%s", playerName));
+        if (plugin.getConfig().contains(String.format("hidden.%s", player.getUniqueId()))) {
+            hidden = plugin.getConfig().getBoolean(String.format("hidden.%s", player.getUniqueId()));
         }
         Material hideMaterial = Material.MAGENTA_DYE;
         String hideText = plugin.getStringConfig().getString("item.show");

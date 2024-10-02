@@ -38,9 +38,9 @@ public class SpawnCommand implements CommandExecutor, TabExecutor {
             if (args.length >= 5) f = args[4];
             else f = String.format("%.1f", loc.getYaw()).replace(",", ".");
         } else {
-            x = loc.getBlockX();
-            y = loc.getBlockY()-1;
-            z = loc.getBlockZ();
+            x = (int) loc.getX();
+            y = (int) loc.getY()-1;
+            z = (int) loc.getZ();
             f = String.format("%.1f", loc.getYaw()).replace(",", ".");
         }
 

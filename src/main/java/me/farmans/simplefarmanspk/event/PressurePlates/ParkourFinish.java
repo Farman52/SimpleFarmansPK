@@ -4,12 +4,17 @@ import com.jeff_media.customblockdata.CustomBlockData;
 import me.farmans.simplefarmanspk.SimpleFarmansPK;
 import me.farmans.simplefarmanspk.event.PlayerInteraction;
 import me.farmans.simplefarmanspk.util.Func;
+import me.farmans.simplefarmanspk.util.MongoDB;
+import org.bson.Document;
 import org.bukkit.Location;
 import org.bukkit.NamespacedKey;
 import org.bukkit.block.Block;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
+
+import java.util.List;
+import java.util.UUID;
 
 public class ParkourFinish {
     public ParkourFinish(SimpleFarmansPK plugin, PlayerInteractEvent event) {
@@ -40,8 +45,9 @@ public class ParkourFinish {
             return;
         }
         double finalTime = (double)(time - (long) PlayerInteraction.times.get(playerName).get(1))/1000;
-        if (!plugin.getConfig().contains(String.format("parkours.%s.times.%s", name, playerName)) || plugin.getConfig().getDouble(String.format("parkours.%s.times.%s", name, playerName)) > finalTime) {
-            plugin.getConfig().set(String.format("parkours.%s.times.%s", name, playerName), finalTime);
+        UUID uuid = event.getPlayer().getUniqueId();
+        if (!plugin.getConfig().contains(String.format("parkours.%s.times.%s", name, uuid)) || plugin.getConfig().getDouble(String.format("parkours.%s.times.%s", name, uuid)) > finalTime) {
+            plugin.getConfig().set(String.format("parkours.%s.times.%s", name, uuid), finalTime);
             plugin.saveConfig();
         }
         String fancyFinalTime = String.valueOf(finalTime);
@@ -58,5 +64,8 @@ public class ParkourFinish {
         Func.showAll(plugin, event.getPlayer());
         String[] xyzSpawn = plugin.getConfig().getString(String.format("parkours.%s.spawn", name)).split(" ");
         event.getPlayer().teleport(new Location(block.getWorld(), Double.parseDouble(xyzSpawn[0]), Double.parseDouble(xyzSpawn[1]), Double.parseDouble(xyzSpawn[2]), Float.parseFloat(xyzSpawn[3]), 0));
+
+        List<Document> documents = MongoDB.read(event.getPlayer(), name);
+        if (documents.isEmpty() || (double)documents.get(0).get("time") > finalTime) MongoDB.insert(event.getPlayer(), name, finalTime);
     }
 }
